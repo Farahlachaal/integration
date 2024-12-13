@@ -5,13 +5,21 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, // Valide un email
+  
   },
   password: {
     type: String,
     required: true,
-    minlength: [6, "Le mot de passe doit contenir au moins 6 caractères."],
-  },
+   
+  }, approved: {
+    type: Boolean,
+    default: false,
+  }
+  // role: {
+  //   type: String,
+  //   enum: ["admin", "user"], // Seuls ces deux rôles sont acceptés
+  //   default: "user", // Par défaut, l'utilisateur est un utilisateur standard
+  // },
 });
 
 module.exports = mongoose.model("User", userSchema);

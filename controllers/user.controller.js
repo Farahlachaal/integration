@@ -38,6 +38,25 @@ const remove = (req,res)=>{
   .catch(err=>res.status(444).send(err))
 }
 
+const approveUser = async (req, res) => {
+  try {
+    const { id } = req.params; 
+    const { approved } = req.body; 
 
+    const user = await UserModel.findByIdAndUpdate(
+      id,
+      { approved },
+      { new: true } 
+    );
 
-module.exports = { getAll, create ,update , remove }
+    if (!user) {
+      return res.status(404).send({ message: "Utilisateur non trouvé" });
+    }
+
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(500).send({ message: "Erreur interne du serveur", error });
+  }
+};
+
+module.exports = { getAll, create ,update , remove ,approveUser}

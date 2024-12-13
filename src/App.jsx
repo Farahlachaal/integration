@@ -15,6 +15,10 @@ import Python from './public/Cours.jsx/python';
 import Certif from './public/certif';
 import TestsPage from './public/Tests/Tests';
 import QCM from './public/QCM/qcm';
+import Skills from './skills';
+import UserManagement from './usermanagement';
+
+
 
 function App() {
   return (
@@ -28,6 +32,8 @@ function App() {
         <Route path="user/Score" element={<Score />} />
         <Route path="user/CreateCV" element={<CreateCV />} />
         <Route path="/certif" element={<Certif />} />
+        <Route path="/cours" element={<Skills />} />
+        <Route path="/usermanagement" element={<UserManagement />} />
 
         {/* Routes pour les pages de cours */}
         <Route path="/cours/design" element={<Design />} />

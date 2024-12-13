@@ -1,8 +1,9 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import localImage from "../../assets/img/login.png";
 import NavBar from "../../components/public/landing/navBar";
+
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -24,35 +25,42 @@ function Login() {
     if (!validateInputs()) return;
 
     try {
-      // Log des données envoyées pour s'assurer qu'elles sont correctes
       console.log("Données envoyées :", { email, password });
 
       const response = await axios.post("http://localhost:8000/auth/login", {
         email,
-        password
+        password,
       });
 
-      // Log de la réponse serveur
-      console.log("Réponse du serveur :", response);
+      console.log("Réponse API :", response);
 
       if (response.status === 200) {
-        // Stocker le token si disponible
-        localStorage.setItem('token', response.data.token);  // Stocker le token dans le localStorage
+        const { token, user } = response.data;
 
-       
-        navigate("/Landing");  // Redirection après une connexion réussie
+        if (token) {
+          // Stockage du token dans localStorage
+          localStorage.setItem("token", token);
+          localStorage.setItem("userEmail", user.email); // Enregistrer l'email dans localStorage
+
+          // Configurer Axios pour envoyer le token avec chaque requête
+          axios.defaults.headers['Authorization'] = `Bearer ${token}`;
+
+
+          // Rediriger vers la page de profil ou tableau de bord après la connexion
+          navigate("/Landing", { state: { id: user.email } });
+        } else {
+          alert("Réponse inattendue du serveur");
+        }
       } else {
-        console.log("Statut inattendu :", response.status);
         setError("Erreur lors de la connexion. Veuillez réessayer.");
       }
-    } catch (err) {
-      console.error("Erreur lors de la connexion :", err);
+    } catch (error) {
+      alert("Informations incorrectes");
+      console.error("Erreur lors de la connexion :", error);
 
-      if (err.response) {
-        console.error("Détails de l'erreur :", err.response.data);
-        setError(err.response.data?.message || "Erreur serveur. Veuillez réessayer plus tard.");
+      if (error.response) {
+        setError(error.response.data?.message || "Erreur serveur. Veuillez réessayer plus tard.");
       } else {
-        // Si la requête échoue sans réponse (ex : problème de réseau)
         setError("Problème de connexion au serveur. Vérifiez votre connexion Internet.");
       }
     }

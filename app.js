@@ -28,8 +28,9 @@ app.delete("/skills/:id", skillsController.remove);
 // Routes utilisateurs
 app.get('/users', userController.getAll);
 app.post('/create_user', uploadMiddleware, userController.create);
-app.put('/users/:id', [authMiddleware, uploadMiddleware], userController.update);
+app.put('/users/:id', [authMiddleware, uploadMiddleware],userController.update);
 app.delete('/users/:id', userController.remove);
+app.put('/users/:id', userController.approveUser);
 
 // Routes authentification
 app.post('/auth/register', authController.register);
