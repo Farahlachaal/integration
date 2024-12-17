@@ -17,6 +17,8 @@ import TestsPage from './public/Tests/Tests';
 import QCM from './public/QCM/qcm';
 import Skills from './skills';
 import UserManagement from './usermanagement';
+import Certificate from './certificate';
+import Quiz from './quiz';
 
 
 
@@ -34,6 +36,8 @@ function App() {
         <Route path="/certif" element={<Certif />} />
         <Route path="/cours" element={<Skills />} />
         <Route path="/usermanagement" element={<UserManagement />} />
+        <Route path="/certificate/:id" element={<Certificate />} />
+        <Route path="/quiz" element={<Quiz />} />
 
         {/* Routes pour les pages de cours */}
         <Route path="/cours/design" element={<Design />} />

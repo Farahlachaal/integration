@@ -3,11 +3,12 @@ const mongoose = require("./mongo");  // Assurez-vous que la connexion MongoDB e
 const cors = require("cors");
 const multipart = require('connect-multiparty');
 const uploadMiddleware = multipart({ uploadDir: './uploads' });
-
+const certificateController = require("./controllers/certificate.controller.js");
 const skillsController = require("./controllers/skills.controller");
 const userController = require("./controllers/user.controller");
 const authController = require('./controllers/auth.controller');
 const { authMiddleware } = require('./middlewares/auth');
+const quizController = require("./controllers/quiz.controller");
 
 const app = express();
 app.use(express.json());
@@ -35,7 +36,17 @@ app.put('/users/:id', userController.approveUser);
 // Routes authentification
 app.post('/auth/register', authController.register);
 app.post('/auth/login', authController.login);
+// app.post("/generate-certificate",authMiddleware, certificateController.generate);
 
+app.get("/certificate/:id",certificateController.generate);
+
+
+app.get("/quiz", quizController.getAll);
+
+
+
+
+app.post("/quiz/submit", quizController.submitQuiz);
 // Middleware de gestion des erreurs globales
 app.use((err, req, res, next) => {
     console.error("Erreur:", err);
@@ -49,6 +60,9 @@ app.use((err, req, res, next) => {
         });
     }
 });
+
+
+
 
 // Démarrage du serveur
 app.listen(8000, () => {
