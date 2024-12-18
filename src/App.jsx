@@ -19,8 +19,8 @@ import Skills from './skills';
 import UserManagement from './usermanagement';
 import Certificate from './certificate';
 import Quiz from './quiz';
-
-
+import PrivateRoute from "./PrivateRoute";
+import Unauthorized from "./Unauthorized"; 
 
 function App() {
   return (
@@ -35,7 +35,7 @@ function App() {
         <Route path="user/CreateCV" element={<CreateCV />} />
         <Route path="/certif" element={<Certif />} />
         <Route path="/cours" element={<Skills />} />
-        <Route path="/usermanagement" element={<UserManagement />} />
+        
         <Route path="/certificate/:id" element={<Certificate />} />
         <Route path="/quiz" element={<Quiz />} />
 
@@ -50,6 +50,17 @@ function App() {
         <Route path="/Tests/Tests" element={<TestsPage />} />
 
         <Route path="/QCM/QCM" element={<QCM/>}/>
+       
+
+        <Route
+          path="/usermanagement"
+          element={
+            <PrivateRoute>
+              <UserManagement />
+            </PrivateRoute>
+          }
+        />
+      <Route path="/unauthorized" element={<Unauthorized />} />
 
       </Routes>
     </Router>

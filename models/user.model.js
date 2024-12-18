@@ -14,12 +14,7 @@ const userSchema = new mongoose.Schema({
   }, approved: {
     type: Boolean,
     default: false,
-  }
-  // role: {
-  //   type: String,
-  //   enum: ["admin", "user"], // Seuls ces deux rôles sont acceptés
-  //   default: "user", // Par défaut, l'utilisateur est un utilisateur standard
-  // },
-});
+  },
+  role: { type: String, enum: ['admin', 'user'], default: 'user' },});
 
 module.exports = mongoose.model("User", userSchema);

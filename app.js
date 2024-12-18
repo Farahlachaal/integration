@@ -4,15 +4,15 @@ const cors = require("cors");
 const multipart = require('connect-multiparty');
 const uploadMiddleware = multipart({ uploadDir: './uploads' });
 const certificateController = require("./controllers/certificate.controller.js");
+const quizController = require("./controllers/quiz.controller.js");
+
 const skillsController = require("./controllers/skills.controller");
 const userController = require("./controllers/user.controller");
 const authController = require('./controllers/auth.controller');
 const { authMiddleware } = require('./middlewares/auth');
-const quizController = require("./controllers/quiz.controller");
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // Route GET pour la page d'accueil
@@ -22,31 +22,39 @@ app.get("/", (req, res) => {
 
 // Routes pour les compétences
 app.get("/skills", skillsController.getAll);
-app.post("/skills", skillsController.create);
-app.put("/skills/:id", skillsController.update);
+app.post("/skills", skillsController.telecharger.single('file'), skillsController.create);
+app.put("/skills/:id",authMiddleware,skillsController.update);
 app.delete("/skills/:id", skillsController.remove);
 
 // Routes utilisateurs
 app.get('/users', userController.getAll);
 app.post('/create_user', uploadMiddleware, userController.create);
 app.put('/users/:id', [authMiddleware, uploadMiddleware],userController.update);
-app.delete('/users/:id', userController.remove);
+app.delete('/users/:id',userController.remove);
 app.put('/users/:id', userController.approveUser);
 
 // Routes authentification
 app.post('/auth/register', authController.register);
 app.post('/auth/login', authController.login);
-// app.post("/generate-certificate",authMiddleware, certificateController.generate);
 
 app.get("/certificate/:id",certificateController.generate);
-
-
 app.get("/quiz", quizController.getAll);
-
-
-
-
 app.post("/quiz/submit", quizController.submitQuiz);
+
+//onlyy admin can access this router
+
+
+
+
+//all can aaccess 
+const path = require('path');
+
+// Configuration pour servir les fichiers statiques
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
+
+
 // Middleware de gestion des erreurs globales
 app.use((err, req, res, next) => {
     console.error("Erreur:", err);
@@ -62,6 +70,18 @@ app.use((err, req, res, next) => {
 });
 
 
+// const formData = new FormData();
+// formData.append('name', 'React');
+// formData.append('description', 'Framework JavaScript');
+// formData.append('file', selectedFile);
+
+// fetch('/skills', {
+//   method: 'POST',
+//   body: formData,
+// })
+// .then(response => response.json())
+// .then(data => console.log(data))
+// .catch(error => console.error('Erreur:', error));
 
 
 // Démarrage du serveur

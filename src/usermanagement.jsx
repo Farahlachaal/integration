@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Navigate } from 'react-router-dom';
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -17,7 +18,14 @@ const UserManagement = () => {
       console.error("Erreur lors de la récupération des utilisateurs", error);
     }
   };
-
+  
+  const ProtectedRoute = ({ children, user }) => {
+    if (!user || user.role !== 'admin') {
+      return <Navigate to="/unauthorized" />;
+    }
+    return children;
+  };
+  
   const handleUpdate = async (id, newData) => {
     try {
       await axios.put(`http://localhost:8000/users/${id}`, newData);
@@ -160,14 +168,7 @@ const UserManagement = () => {
                 >
                   {user.approved ? "Désapprouver" : "Approuver"}
                 </button>
-                {/* <button
-                  className="button edit"
-                  onClick={() =>
-                    handleUpdate(user._id, { name: prompt("Nouveau nom :") })
-                  }
-                >
-                  Modifier
-                </button> */}
+               
                 <button
                   className="button delete"
                   onClick={() =>
@@ -176,6 +177,10 @@ const UserManagement = () => {
                 >
                   Supprimer
                 </button>
+
+   
+  
+
               </td>
             </tr>
           ))}

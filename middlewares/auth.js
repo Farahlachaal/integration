@@ -7,4 +7,5 @@ exports.authMiddleware = (req, res, next) => {
     } else {
         res.status(403).send({message : 'Token required'})
     }
+
 }
